@@ -14,6 +14,12 @@ CREATE TABLE IF NOT EXISTS nivel_ingles (
   check (nome in ('A1','A2','B1','B2','C1','C2'))
 );
 
+CREATE TABLE IF NOT EXISTS situacao (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(45) NULL
+  check (nome in ('ATIVO','INATIVO'))
+);
+
 CREATE TABLE IF NOT EXISTS nicho (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(80) NULL
@@ -32,11 +38,13 @@ CREATE TABLE IF NOT EXISTS usuario (
   cpf VARCHAR(45) NULL,
   telefone VARCHAR(20) NULL,
   autenticado BOOLEAN,
-  situacao VARCHAR(45),
+  profissao VARCHAR(45),
   email VARCHAR(80) NULL,
   senha VARCHAR(18) NULL,
   nivel_acesso_id INT NOT NULL,
-  FOREIGN KEY (nivel_acesso_id) REFERENCES nivel_acesso (id)
+  FOREIGN KEY (nivel_acesso_id) REFERENCES nivel_acesso (id),
+  situacao_id INT,
+  FOREIGN KEY (situacao_id) REFERENCES situacao (id)
 );
 
 CREATE TABLE IF NOT EXISTS horario_professor (
@@ -87,13 +95,17 @@ CREATE TABLE IF NOT EXISTS andamento (
 insert into nicho (nome) values
 ('INFANTIL'), ('BUSINESS'), ('TECNICO'), ('TESTES_INTERNACIONAIS'), ('INICIANTE'), ('INTERMEDIARIO'), ('AVANCADO');
 
+insert into situacao (nome) values
+('ATIVO'), ('INATIVO');
+
 insert into nivel_acesso (nome) values
 ('ALUNO'), ('PROFESSOR_AUXILIAR'), ('REPRESENTANTE_LEGAL');
 
-insert into Usuario (nome_completo, cpf, telefone, email, senha, nivel_acesso_id) values
-('Christian', '300.261.160-30', '11092378173', 'christian@email.com', 'Cleber123', 3);
+insert into Usuario (nome_completo, cpf, telefone, email, senha, nivel_acesso_id, profissao, situacao_id) values
+('Christian', '300.261.160-30', '11092378173', 'christian@email.com', 'Cleber123', 3, 'Professor de Inglês', 1);
 
 
 insert into nivel_ingles (nome) values
 ('A1'), ('A2'), ('B1'), ('B2'), ('C1'), ('C2');
 
+SELECT * FROM usuario;
