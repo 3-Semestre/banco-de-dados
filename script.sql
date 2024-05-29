@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS andamento (
 );
 
 insert into nicho (nome) values
-('INFANTIL'), ('BUSINESS'), ('TECNICO'), ('TESTES_INTERNACIONAIS'), ('INICIANTE'), ('INTERMEDIARIO'), ('AVANCADO');
+('INFANTIL'), ('BUSINESS'), ('TECNICO'), ('TESTES_INTERNACIONAIS'), ('MORADORES_EXTERIOR');
 
 insert into situacao (nome) values
 ('ATIVO'), ('INATIVO');
