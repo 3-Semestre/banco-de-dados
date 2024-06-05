@@ -48,13 +48,13 @@ CREATE TABLE IF NOT EXISTS usuario (
 );
 
 CREATE TABLE IF NOT EXISTS horario_professor (
-  id_horarioProfessor INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  horario_inicial TIME NULL,
-  horario_final TIME NULL,
-  duracao_aula TIME NULL,
-  horario_almoco_inico TIME NULL,
-  fk_idusuario INT NOT NULL,
-  FOREIGN KEY (fk_idusuario) REFERENCES usuario (id)
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  inicio TIME NULL,
+  fim TIME NULL,
+  pausa_inicio TIME NULL,
+  pausa_fim TIME NOT NULL,
+  usuario_id INT NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 );
 
 CREATE TABLE IF NOT EXISTS agendamento (
@@ -104,6 +104,8 @@ insert into nivel_acesso (nome) values
 insert into Usuario (nome_completo, cpf, telefone, email, senha, nivel_acesso_id, profissao, situacao_id) values
 ('Christian', '300.261.160-30', '11092378173', 'christian@email.com', 'Cleber123', 3, 'Professor de Inglês', 1);
 
+INSERT INTO horario_professor (inicio, fim, pausa_inicio, pausa_fim, usuario_id)
+VALUES ('09:00:00', '18:00:00', '12:00:00', '13:00:00', 1);
 
 insert into nivel_ingles (nome) values
 ('A1'), ('A2'), ('B1'), ('B2'), ('C1'), ('C2');
