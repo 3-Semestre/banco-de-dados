@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS usuario (
   nome_completo VARCHAR(120) NULL,
   cpf VARCHAR(45) NULL,
   telefone VARCHAR(20) NULL,
+  data_nascimento DATETIME,
+  data_cadastro DATETIME,
   autenticado BOOLEAN,
   profissao VARCHAR(45),
   email VARCHAR(80) NULL,
@@ -72,9 +74,15 @@ CREATE TABLE IF NOT EXISTS usuario_nicho (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT NOT NULL,
   nicho_id INT NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuario (id),
+  FOREIGN KEY (nicho_id) REFERENCES nicho (id)
+);
+
+CREATE TABLE IF NOT EXISTS usuario_nivel_ingles (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
   nivel_ingles_id INT NOT NULL,
   FOREIGN KEY (usuario_id) REFERENCES usuario (id),
-  FOREIGN KEY (nicho_id) REFERENCES nicho (id),
   FOREIGN KEY (nivel_ingles_id) REFERENCES nivel_ingles (id)
 );
 
@@ -95,19 +103,26 @@ CREATE TABLE IF NOT EXISTS andamento (
 insert into nicho (nome) values
 ('INFANTIL'), ('BUSINESS'), ('TECNICO'), ('TESTES_INTERNACIONAIS'), ('MORADORES_EXTERIOR');
 
+insert into nivel_ingles (nome) values
+('A1'), ('A2'), ('B1'), ('B2'), ('C1'), ('C2');
+
 insert into situacao (nome) values
 ('ATIVO'), ('INATIVO');
 
 insert into nivel_acesso (nome) values
 ('ALUNO'), ('PROFESSOR_AUXILIAR'), ('REPRESENTANTE_LEGAL');
 
-insert into Usuario (nome_completo, cpf, telefone, email, senha, nivel_acesso_id, profissao, situacao_id) values
-('Christian', '300.261.160-30', '11092378173', 'christian@email.com', 'Cleber123', 3, 'Professor de Inglês', 1);
+insert into Usuario (nome_completo, cpf, telefone, email, senha, data_nascimento, data_cadastro, nivel_acesso_id, profissao, situacao_id) values
+('Christian', '300.261.160-30', '11092378173', 'christian@email.com', 'Cleber123','1975-10-02', '2024-06-07', 3, 'Professor de Inglês', 1);
+
+insert into usuario_nicho (usuario_id, nicho_id) values
+(1, 1);
+
+insert into usuario_nivel_ingles (usuario_id, nivel_ingles_id) values
+(1, 1);
 
 INSERT INTO horario_professor (inicio, fim, pausa_inicio, pausa_fim, usuario_id)
 VALUES ('09:00:00', '18:00:00', '12:00:00', '13:00:00', 1);
 
-insert into nivel_ingles (nome) values
-('A1'), ('A2'), ('B1'), ('B2'), ('C1'), ('C2');
 
 SELECT * FROM usuario;
