@@ -11,9 +11,10 @@ CREATE TABLE IF NOT EXISTS nivel_acesso (
 );
 
 INSERT INTO nivel_acesso (nome) VALUES 
-('REPRESENTANTE_LEGAL'),
+('ALUNO'),
 ('PROFESSOR_AUXILIAR'),
-('ALUNO');
+('REPRESENTANTE_LEGAL');
+
 
 SELECT * FROM nivel_acesso;
 
@@ -50,9 +51,10 @@ CREATE TABLE IF NOT EXISTS usuario (
 );
 
 INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastro, autenticado, profissao, email, senha, nivel_acesso_id, situacao_id) VALUES 
-('Christian', '300.261.160-30', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'christian@email.com', 'christian123', 1, 1),
-('João Silva', '123.456.789-00', '11987654321', '1990-07-20', '2024-06-05', TRUE, 'Programador', 'joao.silva@example.com', 'senha123', 3, 1), 
-('Maria Souza', '987.654.321-00', '21987654321', '1982-11-30', '2024-05-05', TRUE, 'Piloto de Avião', 'maria.souza@example.com', 'senha456', 3, 1);
+('Christian', '300.261.160-30', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'christian@email.com', 'christian123', 3, 1),
+('João Silva', '123.456.789-00', '11987654321', '1990-07-20', '2024-06-05', TRUE, 'Programador', 'joao.silva@example.com', 'senha123', 1, 1), 
+('Maria Souza', '987.654.321-00', '21987654321', '1982-11-30', '2024-05-05', TRUE, 'Piloto de Avião', 'maria.souza@example.com', 'senha456', 1, 1),
+('FILHO Christian', '512.812.694-98', '11962433887', '2000-08-30', '2024-06-05', TRUE, 'Professor de Inglês', 'Filhochristian@email.com', 'Filhochristian123', 2, 1);
 
 
 select * from usuario;
@@ -422,7 +424,7 @@ JOIN
     vw_ultima_atualizacao_agendamento ua ON a.id = ua.fk_agendamento
 WHERE 
     ua.fk_status = (SELECT id FROM status WHERE nome = 'CONFIRMADO')
-    AND ua.fk_professor = 1  -- Substitua pelo ID do professor específico
+    AND ua.fk_professor = 1 
     AND (a.data > CURDATE() OR (a.data = CURDATE() AND a.horario_inicio > CURTIME()))
 ORDER BY 
     a.data, 
@@ -440,22 +442,22 @@ FROM (
     FROM agendamento a
     JOIN vw_ultima_atualizacao_agendamento ua ON a.id = ua.fk_agendamento
     JOIN status s ON ua.fk_status = s.id
-    WHERE MONTH(a.data) = MONTH('2024-06-10') AND YEAR(a.data) = YEAR('2024-06-10')
+    WHERE MONTH(a.data) = MONTH(CURDATE()) AND YEAR(a.data) = YEAR(CURDATE())
     AND s.nome = 'CONFIRMADO'
 ) AS subquery;
 
 SELECT * FROM qtd_agendamento_mes;
-
 /* ID - 03 -> Tempo confirmação agendamento */
 
     /*EM DESENVOLVIMENTO*/
+    
 /* ID - 04 ->  Quantidade de novos alunos no mes */
 CREATE VIEW qtd_novos_alunos AS
 SELECT COUNT(*) AS quantidade_usuarios_novos
 FROM usuario
 WHERE MONTH(data_cadastro) = MONTH(CURRENT_DATE())
 AND YEAR(data_cadastro) = YEAR(CURRENT_DATE())
-AND nivel_acesso_id = 3;
+AND nivel_acesso_id = 1;
 
 SELECT * FROM qtd_novos_alunos;
 
@@ -471,6 +473,7 @@ AND fk_status = (SELECT id FROM status WHERE nome = 'CANCELADO');
 select * from qtd_cancelamento_aulas;
 
 /* ID - 06 -> Quantidade de aulas concluidas e não concluido (Do inicio do mes até hj) */
+
 CREATE VIEW qtd_conclusao_ou_nao AS
 SELECT 
     SUM(CASE WHEN v.fk_status = 3 THEN 1 ELSE 0 END) AS qtd_aulas_concluidas,
@@ -516,7 +519,7 @@ WHERE (a.data > CURRENT_DATE()
 
     
 SELECT * FROM proximos_agendamentos;    
-DROP VIEW proximos_agendamentos;    
+  
 
 /* ID - 09 -> Agendamento que já foram */
 CREATE VIEW agendamentos_passados as
@@ -540,24 +543,47 @@ WHERE (a.data <= CURRENT_DATE() OR v.fk_status = 4)
     ORDER BY a.data;
     
 SELECT * FROM agendamentos_passados;
-DROP VIEW agendamentos_passados;
+
 
 /* ID - 10 -> Lista de todos professores */
 CREATE VIEW todos_professores as 
 SELECT *
 FROM usuario
-WHERE nivel_acesso_id IN (1, 2);
+WHERE nivel_acesso_id IN (2, 3);
 
 
 select * from todos_professores;
 
+DROP VIEW todos_professores;
+
+
+select * from nivel_acesso;
+
+
 /* ID - 11 -> Lista de todos alunos */
 CREATE VIEW todos_alunos as 
-SELECT *
-FROM usuario
-WHERE nivel_acesso_id = 3;
+SELECT 
+    u.nome_completo AS Nome_Completo,
+    u.telefone AS Telefone,
+    u.cpf AS CPF,
+    u.email AS Email,
+    u.data_nascimento AS Data_Nascimento,
+    ni.nome AS Nivel_Ingles,
+    n.nome AS Nicho
+FROM 
+    usuario u
+JOIN 
+    usuario_nivel_ingles uni ON u.id = uni.usuario_id
+JOIN 
+    nivel_ingles ni ON uni.nivel_ingles_id = ni.id
+JOIN
+    usuario_nicho un ON u.id = un.usuario_id
+JOIN
+    nicho n ON un.nicho_id = n.id
+    WHERE nivel_acesso_id = 1;
 
 select * from todos_alunos;
+
 
 /* ID 12 ->  Proximos 3 Agendamento Aluno*/
 
