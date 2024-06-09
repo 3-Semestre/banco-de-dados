@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS nivel_acesso (
 );
 
 INSERT INTO nivel_acesso (nome) VALUES 
-('REPRESENTANTE_LEGAL'),
+('ALUNO'),
 ('PROFESSOR_AUXILIAR'),
-('ALUNO');
+('REPRESENTANTE_LEGAL');
 
 SELECT * FROM nivel_acesso;
 
@@ -179,8 +179,8 @@ select * from agendamento;
 
 -- Historico Agendamento
 
-CREATE TABLE IF NOT EXISTS historico_agendamento (
-  id VARCHAR(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS andamento (
+  id INT NOT NULL AUTO_INCREMENT,
   data_atualizacao DATE,
   agendamento_id INT NOT NULL,
   status_id INT NOT NULL,
@@ -189,9 +189,9 @@ CREATE TABLE IF NOT EXISTS historico_agendamento (
   FOREIGN KEY (status_id) REFERENCES status (id)
 );
 
-INSERT INTO historico_agendamento (id, data_atualizacao, agendamento_id, status_id) VALUES 
+INSERT INTO andamento (id, data_atualizacao, agendamento_id, status_id) VALUES 
 ('1', '2024-06-06', 1, 1),
 ('2', '2024-06-06', 1, 2),
 ('3', '2024-06-06', 2, 1);
 
-select * from historico_agendamento;
+select * from andamento;
