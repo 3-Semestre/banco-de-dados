@@ -547,15 +547,24 @@ SELECT * FROM agendamentos_passados;
 
 /* ID - 10 -> Lista de todos professores */
 CREATE VIEW todos_professores as 
-SELECT *
-FROM usuario
-WHERE nivel_acesso_id IN (2, 3);
-
-
-select * from todos_professores;
-
-DROP VIEW todos_professores;
-
+SELECT u.nome_completo,
+       u.telefone,
+       u.cpf,
+       u.email,
+       u.data_nascimento,
+       ni.nome AS nivel_ingles,
+       ni2.nome as nicho,
+       hp.inicio,
+       hp.fim,
+       hp.pausa_inicio,
+       hp.pausa_fim
+FROM usuario AS u
+JOIN usuario_nivel_ingles AS uni ON u.id = uni.usuario_id
+JOIN nivel_ingles AS ni ON uni.nivel_ingles_id = ni.id
+JOIN usuario_nicho AS un ON u.id = un.usuario_id
+JOIN nicho AS ni2 ON un.nicho_id = ni2.id
+JOIN horario_professor AS hp ON u.id = hp.usuario_id
+WHERE u.nivel_acesso_id IN (2, 3);
 
 select * from nivel_acesso;
 
