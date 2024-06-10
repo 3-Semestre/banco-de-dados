@@ -410,8 +410,8 @@ SELECT
 	DAYNAME(a.data) AS dia_semana,
     a.horario_inicio, 
     a.horario_fim, 
-    p.nome_completo AS professor, 
-    al.nome_completo AS aluno
+    p.nome_completo AS professor_nome, 
+    al.nome_completo AS aluno_nome
 FROM 
     agendamento a
 JOIN 
@@ -422,14 +422,49 @@ JOIN
     vw_ultima_atualizacao_agendamento ua ON a.id = ua.fk_agendamento
 WHERE 
     ua.fk_status = (SELECT id FROM status WHERE nome = 'CONFIRMADO')
-    AND ua.fk_professor = 1  -- Substitua pelo ID do professor específico
-    AND (a.data > CURDATE() OR (a.data = CURDATE() AND a.horario_inicio > CURTIME()))
+	AND (a.data > CURDATE() OR (a.data = CURDATE() AND a.horario_inicio > CURTIME()))
 ORDER BY 
     a.data, 
     a.horario_inicio
 LIMIT 3;
 
 SELECT * FROM proximos_tres_agendamento_P;
+
+DELIMITER //
+
+CREATE PROCEDURE proximos_tres_agendamento_P (IN professor_id INT)
+BEGIN
+    SELECT 
+        a.id AS id_agendamento, 
+        a.data, 
+        DAYNAME(a.data) AS dia_semana,
+        a.horario_inicio, 
+        a.horario_fim, 
+        p.nome_completo AS professor, 
+        al.nome_completo AS aluno
+    FROM 
+        agendamento a
+    JOIN 
+        usuario p ON a.fk_professor = p.id
+    JOIN 
+        usuario al ON a.fk_aluno = al.id
+    JOIN 
+        vw_ultima_atualizacao_agendamento ua ON a.id = ua.fk_agendamento
+    WHERE 
+        ua.fk_status = (SELECT id FROM status WHERE nome = 'CONFIRMADO')
+        AND ua.fk_professor = professor_id
+        AND (a.data > CURDATE() OR (a.data = CURDATE() AND a.horario_inicio > CURTIME()))
+    ORDER BY 
+        a.data, 
+        a.horario_inicio
+    LIMIT 3;
+END //
+
+DELIMITER ;
+
+-- Chame a procedure com o ID do professor
+CALL proximos_tres_agendamento_P(1);
+
 
 /* ID 02-> Buscar a qtd de aulas agendadas para aquele mes */
 
@@ -516,7 +551,6 @@ WHERE (a.data > CURRENT_DATE()
 
     
 SELECT * FROM proximos_agendamentos;    
-DROP VIEW proximos_agendamentos;    
 
 /* ID - 09 -> Agendamento que já foram */
 CREATE VIEW agendamentos_passados as
@@ -540,13 +574,27 @@ WHERE (a.data <= CURRENT_DATE() OR v.fk_status = 4)
     ORDER BY a.data;
     
 SELECT * FROM agendamentos_passados;
-DROP VIEW agendamentos_passados;
 
 /* ID - 10 -> Lista de todos professores */
 CREATE VIEW todos_professores as 
-SELECT *
-FROM usuario
-WHERE nivel_acesso_id IN (1, 2);
+SELECT u.nome_completo,
+       u.telefone,
+       u.cpf,
+       u.email,
+       u.data_nascimento,
+       ni.nome AS nivel_ingles,
+       ni2.nome as nicho,
+       hp.inicio,
+       hp.fim,
+       hp.pausa_inicio,
+       hp.pausa_fim
+FROM usuario AS u
+JOIN usuario_nivel_ingles AS uni ON u.id = uni.usuario_id
+JOIN nivel_ingles AS ni ON uni.nivel_ingles_id = ni.id
+JOIN usuario_nicho AS un ON u.id = un.usuario_id
+JOIN nicho AS ni2 ON un.nicho_id = ni2.id
+JOIN horario_professor AS hp ON u.id = hp.usuario_id
+WHERE u.nivel_acesso_id IN (2, 3);
 
 
 select * from todos_professores;
@@ -565,10 +613,11 @@ CREATE VIEW proximos_tres_agendamento_A AS
 SELECT 
     a.id AS id_agendamento, 
     a.data, 
+	DAYNAME(a.data) AS dia_semana,
     a.horario_inicio, 
     a.horario_fim, 
-    p.nome_completo AS professor, 
-    al.nome_completo AS aluno
+    p.nome_completo AS professor_nome, 
+    al.nome_completo AS aluno_nome
 FROM 
     agendamento a
 JOIN 
