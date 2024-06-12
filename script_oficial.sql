@@ -173,6 +173,9 @@ CREATE TABLE IF NOT EXISTS agendamento (
 );
 
 INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professor, fk_aluno) VALUES 
+('2024-07-11', '12:00:00', '13:00:00', 'Aula de Inglês', 1, 3),
+('2024-07-11', '13:00:00', '14:00:00', 'Aula de Inglês', 1, 3),
+('2024-07-12', '12:00:00', '13:00:00', 'Aula de Inglês', 1, 2),
 ('2024-06-01', '08:00:00', '09:00:00', 'Aula de Inglês', 1, 2),
 ('2024-06-01', '09:00:00', '10:00:00', 'Aula de Inglês', 1, 3),
 ('2024-06-01', '10:00:00', '11:00:00', 'Aula de Inglês', 1, 2),
@@ -222,7 +225,8 @@ INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professo
 ('2024-06-10', '09:00:00', '10:00:00', 'Aula de Inglês', 1, 3),
 ('2024-06-10', '10:00:00', '11:00:00', 'Aula de Inglês', 1, 2),
 ('2024-06-10', '11:00:00', '12:00:00', 'Aula de Inglês', 1, 3),
-('2024-06-10', '12:00:00', '13:00:00', 'Aula de Inglês', 1, 2);
+('2024-07-10', '12:00:00', '13:00:00', 'Aula de Inglês', 1, 2);
+
 
 select * from agendamento;
 
@@ -239,6 +243,12 @@ CREATE TABLE IF NOT EXISTS historico_agendamento (
 );
 
 INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
+('2024-06-07', 1, 1), -- Pendente
+('2024-06-07', 1, 2), -- Confirmado
+('2024-06-07', 2, 1), -- Pendente
+('2024-06-07', 2, 2), -- Confirmado
+('2024-06-07', 3, 1), -- Pendente
+('2024-06-07', 3, 2), -- Confirmado
 ('2024-06-07', 1, 1), -- Pendente
 ('2024-06-07', 1, 2), -- Confirmado
 ('2024-06-07', 1, 3), -- Concluído
@@ -373,7 +383,11 @@ INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) 
 ('2024-06-07', 49, 1), -- Pendente
 ('2024-06-07', 49, 2), -- Confirmado
 ('2024-06-07', 50, 1), -- Pendente
-('2024-06-07', 50, 2); -- Confirmado
+('2024-06-07', 51, 3), -- Confirmado
+('2024-06-07', 51, 2), -- Confirmado
+('2024-06-07', 52, 2), -- Confirmado
+('2024-06-07', 53, 2); -- Confirmado
+
 
 select * from historico_agendamento;
 
@@ -399,7 +413,7 @@ JOIN agendamento a ON ha.agendamento_id = a.id;
 
 select * from vw_ultima_atualizacao_agendamento;
 
-
+select * from agendamento;
 
 /* ID 01 ->  Proximos 3 Agendamento Professor */
 
@@ -429,6 +443,7 @@ ORDER BY
 LIMIT 3;
 
 SELECT * FROM proximos_tres_agendamento_P;
+select * from historico_agendamento;
 
 DELIMITER //
 
