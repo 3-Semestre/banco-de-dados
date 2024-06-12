@@ -117,5 +117,19 @@ CREATE TABLE IF NOT EXISTS historico_agendamento (
   FOREIGN KEY (status_id) REFERENCES status (id)
 );
 
+-- Nivel Acesso 
+INSERT INTO nivel_acesso (nome) VALUES 
+('ALUNO'),
+('PROFESSOR_AUXILIAR'),
+('REPRESENTANTE_LEGAL');
+
+SELECT * FROM nivel_acesso;
+
+-- Situação
+INSERT INTO situacao (nome) VALUES 
+('ATIVO'),
+('INATIVO');
+
 INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastro, autenticado, profissao, email, senha, nivel_acesso_id, situacao_id) VALUES 
 ('Christian', '300.261.160-30', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'christian@email.com', 'christian123', 3, 1);
+
