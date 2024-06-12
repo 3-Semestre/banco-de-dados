@@ -116,3 +116,6 @@ CREATE TABLE IF NOT EXISTS historico_agendamento (
   FOREIGN KEY (agendamento_id) REFERENCES agendamento (id),
   FOREIGN KEY (status_id) REFERENCES status (id)
 );
+
+INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastro, autenticado, profissao, email, senha, nivel_acesso_id, situacao_id) VALUES 
+('Christian', '300.261.160-30', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'christian@email.com', 'christian123', 3, 1);
