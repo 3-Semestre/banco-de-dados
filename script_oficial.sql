@@ -148,6 +148,8 @@ CREATE TABLE IF NOT EXISTS status (
   nome VARCHAR(45) NULL,
   descricao VARCHAR(45) NULL
 );
+use english4ever;
+select * from usuario;
 
 INSERT INTO status (nome, descricao) VALUES 
 ('PENDENTE', 'Agendamento pendente'), 

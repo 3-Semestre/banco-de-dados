@@ -358,5 +358,7 @@ GROUP BY DATE_FORMAT(v.agendamento_data, '%Y-%m');
 
 SELECT round(taxa_cancelamento,2) as taxa_cancelamento, mes FROM taxa_cancelamento_por_mes order by mes asc;
 
+use english4ever;
+SELECT * FROM taxa_cancelamento_por_mes;
 
-SELECT * FROM qtd_conclusao_ou_nao;
+-- criar get mes, get taxa_cancelamentos
