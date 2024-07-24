@@ -361,5 +361,40 @@ WHERE (a.data <= CURRENT_DATE() OR v.fk_status = 4)
     AND a.fk_aluno = 2
     ORDER BY a.data;
 
-
 SELECT * FROM agendamentos_passados_aluno;
+
+CREATE VIEW perfil AS
+SELECT
+	u.id,
+	u.nome_completo,
+	u.cpf,
+	u.data_nascimento,
+	u.profissao,
+	u.telefone,
+	u.email,
+	u.senha,
+	u.nivel_acesso_id,
+	hp.inicio,
+	hp.fim,
+	hp.pausa_inicio,
+	hp.pausa_fim
+FROM
+	usuario as u
+JOIN
+	horario_professor as hp
+ON hp.usuario_id = u.id;
+
+
+CREATE VIEW perfil~_aluno AS
+SELECT
+	u.id,
+	u.nome_completo,
+	u.cpf,
+	u.data_nascimento,
+	u.profissao,
+	u.telefone,
+	u.email,
+	u.senha,
+	u.nivel_acesso_id
+FROM
+	usuario as u;
