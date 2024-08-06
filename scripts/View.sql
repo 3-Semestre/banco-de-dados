@@ -385,7 +385,7 @@ JOIN
 ON hp.usuario_id = u.id;
 
 
-CREATE VIEW perfil~_aluno AS
+CREATE VIEW perfil_aluno AS
 SELECT
 	u.id,
 	u.nome_completo,
