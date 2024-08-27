@@ -48,6 +48,7 @@ INSERT INTO usuario_nivel_ingles (usuario_id, nivel_ingles_id) VALUES
 (1, 4),
 (2, 2),
 (3, 5),
+(3, 6),
 (4, 6);
 
 select * from usuario_nivel_ingles;
@@ -67,6 +68,7 @@ select * from nicho;
 
 INSERT INTO usuario_nicho (usuario_id, nicho_id) VALUES 
 (1, 2),
+(1, 3),
 (2, 1),
 (3, 3),
 (4, 4);
@@ -198,12 +200,12 @@ INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) 
 ('2024-06-15', 30, 3),
 ('2024-07-15', 31, 3),
 ('2024-08-15', 32, 3),
-('2024-09-15', 33, 3),
-('2024-10-15', 34, 3),
-('2024-11-15', 35, 3),
-('2024-12-15', 36, 3),
-('2024-12-15', 37, 3),
-('2024-12-15', 38, 3),
-('2024-12-15', 39, 3);
+('2024-09-15', 33, 2),
+('2024-10-15', 34, 2),
+('2024-11-15', 35, 2),
+('2024-12-15', 36, 2),
+('2024-12-15', 37, 2),
+('2024-12-15', 38, 2),
+('2024-12-15', 39, 2);
 
 select * from historico_agendamento;

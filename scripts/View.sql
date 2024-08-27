@@ -408,7 +408,7 @@ DELIMITER ;
 CALL agendamentos_passados_aluno(2);
 
 /* ID - 17 -> Perfil professores */
-CREATE VIEW perfil AS
+CREATE VIEW perfil_professor AS
 SELECT
 	u.id,
 	u.nome_completo,
@@ -429,12 +429,12 @@ JOIN
 	horario_professor as hp
 ON hp.usuario_id = u.id;
 
-select * from perfil;
-
+select * from perfil_professor;
+drop view perfil;
 /* ID - 18 -> Perfil Aluno*/
 
-CREATE VIEW perfil_aluno AS
-SELECT
+CREATE VIEW perfil AS
+SELECT 
 	u.id,
 	u.nome_completo,
 	u.cpf,
@@ -443,10 +443,25 @@ SELECT
 	u.telefone,
 	u.email,
 	u.senha,
-	u.nivel_acesso_id
-FROM
-	usuario as u;
+	u.nivel_acesso_id,
+    GROUP_CONCAT(DISTINCT n.nome ORDER BY n.nome ASC SEPARATOR ', ') AS nichos,
+    GROUP_CONCAT(DISTINCT ni.nome ORDER BY ni.nome ASC SEPARATOR ', ') AS niveis_ingles
+FROM 
+    usuario u
+INNER JOIN 
+    usuario_nicho un ON u.id = un.usuario_id
+INNER JOIN 
+    nicho n ON un.nicho_id = n.id
+INNER JOIN 
+    usuario_nivel_ingles uni ON u.id = uni.usuario_id
+INNER JOIN 
+    nivel_ingles ni ON uni.nivel_ingles_id = ni.id
+GROUP BY 
+    u.id, u.nome_completo;
     
-select * from perfil_aluno;
+select * from perfil;
+drop view perfil;
 
+
+    
 
