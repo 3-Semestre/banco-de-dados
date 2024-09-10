@@ -18,7 +18,7 @@ INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastr
 ('Christian', '300.261.160-30', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'christian@email.com', 'christian123', 3, 1),
 ('João Silva', '123.456.789-00', '11987654321', '1990-07-20', '2024-06-05', TRUE, 'Programador', 'joao.silva@example.com', 'senha123', 1, 1), 
 ('Maria Souza', '987.654.321-00', '21987654321', '1982-11-30', '2024-05-05', TRUE, 'Piloto de Avião', 'maria.souza@example.com', 'senha456', 1, 1),
-('Filho Christian', '546.097.435-00', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'filhochristian@email.com', 'Filhochristian123', 3, 1);
+('Filho Christian', '546.097.435-00', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'filhochristian@email.com', 'Filhochristian123', 2, 1);
 
 select * from usuario;
 
