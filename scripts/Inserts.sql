@@ -128,7 +128,10 @@ INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_aluno, f
 ('2024-10-15', '10:00:00', '11:00:00', 'Aula de Outubro', 2, 1),
 ('2024-11-15', '10:00:00', '11:00:00', 'Aula de Novembro', 2, 1),
 ('2024-12-15', '10:00:00', '11:00:00', 'Aula de Dezembro', 2, 1),
-('2024-12-15', '11:00:00', '12:00:00', 'Aula de Dezembro', 2, 1);
+('2024-12-15', '11:00:00', '12:00:00', 'Aula de Dezembro', 2, 1),
+('2024-11-15', '10:00:00', '11:00:00', 'Aula de Novembro', 2, 4),
+('2024-12-15', '10:00:00', '11:00:00', 'Aula de Dezembro', 2, 4),
+('2024-12-15', '11:00:00', '12:00:00', 'Aula de Dezembro', 2, 4);
 
 select * from agendamento;
 
@@ -206,6 +209,12 @@ INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) 
 ('2024-12-15', 36, 2),
 ('2024-12-15', 37, 2),
 ('2024-12-15', 38, 2),
-('2024-12-15', 39, 2);
+('2024-12-15', 39, 2),
+('2024-08-18', 40, 1), -- Pendente
+('2024-08-18', 40, 2), -- Confirmado
+('2024-08-18', 41, 1), -- Pendente
+('2024-08-18', 41, 2), -- Confirmado
+('2024-08-18', 42, 1),
+('2024-08-18', 42, 2);
 
 select * from historico_agendamento;
