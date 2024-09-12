@@ -32,8 +32,8 @@ BEGIN
         DAYNAME(a.data) AS dia_semana,
         a.horario_inicio, 
         a.horario_fim, 
-        p.nome_completo AS professor, 
-        al.nome_completo AS aluno
+        p.nome_completo AS professor_nome, 
+        al.nome_completo AS aluno_nome
     FROM 
         agendamento a
     JOIN 
