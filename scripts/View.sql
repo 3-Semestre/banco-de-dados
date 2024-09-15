@@ -419,18 +419,29 @@ SELECT
 	u.email,
 	u.senha,
 	u.nivel_acesso_id,
+    GROUP_CONCAT(DISTINCT n.nome ORDER BY n.nome ASC SEPARATOR ', ') AS nichos,
+    GROUP_CONCAT(DISTINCT ni.nome ORDER BY ni.nome ASC SEPARATOR ', ') AS niveis_ingles,
 	hp.inicio,
 	hp.fim,
 	hp.pausa_inicio,
 	hp.pausa_fim
 FROM
 	usuario as u
+INNER JOIN 
+    usuario_nicho un ON u.id = un.usuario_id
+INNER JOIN 
+    nicho n ON un.nicho_id = n.id
+INNER JOIN 
+    usuario_nivel_ingles uni ON u.id = uni.usuario_id
+INNER JOIN 
+    nivel_ingles ni ON uni.nivel_ingles_id = ni.id
 JOIN
 	horario_professor as hp
-ON hp.usuario_id = u.id;
+ON hp.usuario_id = u.id
+GROUP BY 
+    u.id, u.nome_completo, u.cpf, u.data_nascimento, u.profissao, u.telefone, u.email, u.senha, u.nivel_acesso_id, hp.inicio, hp.fim, hp.pausa_inicio, hp.pausa_fim;
 
 select * from perfil_professor;
-drop view perfil;
 /* ID - 18 -> Perfil Aluno*/
 
 CREATE VIEW perfil AS
@@ -459,8 +470,6 @@ INNER JOIN
 GROUP BY 
     u.id, u.nome_completo;
     
-select * from perfil;
-drop view perfil;
 
 
     
