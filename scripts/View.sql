@@ -473,7 +473,24 @@ WHERE
     u.nivel_acesso_id = 1
 GROUP BY 
     u.id, u.nome_completo;
+
+/* ID - 19 -> TAXA DE CANCELAMENTO MENSAL*/
+CREATE VIEW taxa_cancelamento_mensal AS
+SELECT 
+    CONCAT(YEAR(MIN(vw.agendamento_data)), '-', LPAD(MONTH(MIN(vw.agendamento_data)), 2, '0')) AS mes_ano,
+    ROUND((SUM(CASE WHEN s.nome = 'CANCELADO' THEN 1 ELSE 0 END) / COUNT(vw.fk_agendamento)) * 100, 2) AS taxa_cancelamento
+FROM 
+    vw_ultima_atualizacao_agendamento vw
+JOIN 
+    status s ON vw.fk_status = s.id
+GROUP BY 
+    YEAR(vw.agendamento_data), MONTH(vw.agendamento_data)
+ORDER BY 
+    YEAR(vw.agendamento_data), MONTH(vw.agendamento_data);
     
+select * from taxa_cancelamento_mensal;
+
+/* ID - 20 -> TAXA DE CANCELAMENTO MENSAL*/
 CREATE VIEW agendamentos_detalhes AS
 SELECT 
     a.id,
@@ -493,3 +510,4 @@ FROM
     JOIN usuario u ON a.fk_aluno = u.id
 GROUP BY 
     a.id, p.nome_completo, u.nome_completo;
+select * from agendamentos_detalhes;
