@@ -473,7 +473,23 @@ WHERE
     u.nivel_acesso_id = 1
 GROUP BY 
     u.id, u.nome_completo;
-
-
     
-
+CREATE VIEW agendamentos_detalhes AS
+SELECT 
+    a.id,
+    a.data,
+    a.horario_inicio,
+    a.horario_fim,
+    a.assunto,
+    a.fk_professor,
+    p.nome_completo AS nome_professor,
+    a.fk_aluno,
+    u.nome_completo AS nome_aluno,
+    GROUP_CONCAT(h.status_id ORDER BY h.status_id ASC) AS status_list
+FROM 
+    agendamento a
+    JOIN historico_agendamento h ON h.agendamento_id = a.id
+    JOIN usuario p ON a.fk_professor = p.id
+    JOIN usuario u ON a.fk_aluno = u.id
+GROUP BY 
+    a.id, p.nome_completo, u.nome_completo;
