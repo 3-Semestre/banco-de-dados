@@ -181,6 +181,8 @@ BEGIN
     ORDER BY a.data;
 END //
 
+
+
 DELIMITER ;
 
 CALL agendamentos_passados(1);
@@ -490,7 +492,7 @@ ORDER BY
     
 select * from taxa_cancelamento_mensal;
 
-/* ID - 20 -> TAXA DE CANCELAMENTO MENSAL*/
+/* ID - 20 -> Agendamento detalhado */
 CREATE VIEW agendamentos_detalhes AS
 SELECT 
     a.id,
@@ -511,3 +513,105 @@ FROM
 GROUP BY 
     a.id, p.nome_completo, u.nome_completo;
 select * from agendamentos_detalhes;
+
+/* ID - 21 -> quantidade de aulas canceladas */
+DELIMITER //
+
+CREATE PROCEDURE qtd_agendamentos_cancelados( IN p_usuario_id INT)
+BEGIN
+    SELECT COUNT(*) AS qtd_agendamentos_cancelados
+    FROM vw_ultima_atualizacao_agendamento v
+    JOIN status s ON v.fk_status = s.id
+    WHERE s.nome = 'CANCELADO'
+      AND MONTH(v.data_atualizacao) = MONTH(CURDATE())
+      AND YEAR(v.data_atualizacao) = YEAR(CURDATE())
+      AND v.fk_professor = p_usuario_id;
+END //
+
+DELIMITER ;
+
+CALL qtd_agendamentos_cancelados(1);
+ 
+ /*ID - 22 -> qtd de aulas transferidas*/
+ DELIMITER //
+
+CREATE PROCEDURE aulas_transferidas_por_professor(IN id_professor INT)
+BEGIN
+    SELECT COUNT(*) AS qtd_aulas_transferidas
+    FROM vw_ultima_atualizacao_agendamento
+    WHERE fk_status = (SELECT id FROM status WHERE nome = 'TRANSFERIDO')
+    AND fk_professor = id_professor
+    AND MONTH(data_atualizacao) = MONTH(CURRENT_DATE())
+    AND YEAR(data_atualizacao) = YEAR(CURRENT_DATE());
+END //
+
+DELIMITER ;
+
+call aulas_transferidas_por_professor (1);
+
+/*ID - 23 -> Metas*/
+DELIMITER //
+CREATE PROCEDURE taxa_cumprimento_metas(IN id_professor INT)
+BEGIN
+    SELECT  
+        u.id AS professor_id,
+        u.nome_completo AS professor_nome,
+        (COALESCE(COUNT(v.fk_professor), 0) / m.qtd_aula) * 100 AS taxa_cumprimento
+    FROM 
+        usuario u
+    JOIN 
+        metas m ON u.id = m.usuario_id
+    LEFT JOIN 
+        vw_ultima_atualizacao_agendamento v ON u.id = v.fk_professor
+    WHERE
+        v.fk_professor = id_professor
+        AND DATE(v.agendamento_data) >= DATE_FORMAT(CURRENT_DATE, '%Y-%m-01')
+        AND DATE(v.agendamento_data) < DATE_FORMAT(DATE_ADD(CURRENT_DATE, INTERVAL 1 MONTH), '%Y-%m-01')
+        AND v.fk_status = 3  -- Filtra apenas agendamentos com status igual a 3
+        AND m.qtd_aula > 0  -- Evita divisão por zero
+    GROUP BY 
+        u.id, m.id
+    ORDER BY 
+        u.nome_completo;
+END //
+DELIMITER ;
+ 
+ CALL taxa_cumprimento_metas(3);
+
+/*ID -24 -> Quantidade de alunos por mes */
+DELIMITER //
+
+CREATE PROCEDURE qtd_aluno_por_mes(IN fk_professor INT)
+BEGIN
+SELECT
+    CASE MONTH(a.data)
+        WHEN 1 THEN 'Janeiro'
+        WHEN 2 THEN 'Fevereiro'
+        WHEN 3 THEN 'Março'
+        WHEN 4 THEN 'Abril'
+        WHEN 5 THEN 'Maio'
+        WHEN 6 THEN 'Junho'
+        WHEN 7 THEN 'Julho'
+        WHEN 8 THEN 'Agosto'
+        WHEN 9 THEN 'Setembro'
+        WHEN 10 THEN 'Outubro'
+        WHEN 11 THEN 'Novembro'
+        WHEN 12 THEN 'Dezembro'
+    END AS mes,
+    COUNT(DISTINCT a.fk_aluno) AS quantidade_alunos_atendidos
+FROM
+    agendamento a
+JOIN
+    vw_ultima_atualizacao_agendamento v ON a.id = v.fk_agendamento
+WHERE
+    v.fk_status = 3  -- Status de aula concluída (ajuste conforme necessário)
+    AND v.fk_professor = 1  -- Substitua '1' pelo ID do professor que deseja testar
+    AND a.data >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)  -- Filtra aulas do último ano
+GROUP BY
+    mes, MONTH(a.data)
+ORDER BY
+    MONTH(a.data);
+END //
+DELIMITER ;
+
+call qtd_aluno_por_mes(1);

@@ -45,6 +45,15 @@ CREATE TABLE IF NOT EXISTS horario_professor (
   FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
 );
 
+-- Metas 
+CREATE TABLE IF NOT EXISTS metas (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  descricao VARCHAR(255) NOT NULL,
+  qtd_aula INT NOT NULL,
+  usuario_id INT NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
+);
+
 -- Nivel Ingles
 CREATE TABLE IF NOT EXISTS nivel_ingles (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
