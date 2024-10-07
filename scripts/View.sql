@@ -7,7 +7,9 @@ SELECT
     a.fk_aluno,
     ha.status_id AS fk_status,
     ha.data_atualizacao,
-    a.data AS agendamento_data
+    a.data AS agendamento_data,
+	a.horario_inicio,
+    a.horario_fim
 FROM (
     SELECT 
         agendamento_id,
@@ -615,3 +617,55 @@ END //
 DELIMITER ;
 
 call qtd_aluno_por_mes(1);
+
+/*ID 25 -> HORARIOS DISPONIVEIS */
+
+DELIMITER //
+
+CREATE PROCEDURE sp_horarios_disponiveis (
+    IN p_dia DATE,
+    IN p_id_professor INT
+)
+BEGIN
+    WITH horarios AS (
+        -- Gerar horas dentro do intervalo de trabalho antes da pausa
+        SELECT 
+            u.nome_completo,
+            ADDTIME(hp.inicio, MAKETIME(n.n, 0, 0)) AS horario_inicio,
+            ADDTIME(ADDTIME(hp.inicio, MAKETIME(n.n, 0, 0)), '00:59:59') AS horario_fim
+        FROM usuario u
+        JOIN horario_professor hp ON u.id = hp.usuario_id
+        CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) n
+        WHERE hp.usuario_id = p_id_professor
+        AND ADDTIME(hp.inicio, MAKETIME(n.n, 0, 0)) < hp.pausa_inicio
+        
+        UNION ALL
+        
+        -- Gerar horas dentro do intervalo de trabalho depois da pausa
+        SELECT 
+            u.nome_completo,
+            ADDTIME(hp.pausa_fim, MAKETIME(n.n, 0, 0)) AS horario_inicio,
+            ADDTIME(ADDTIME(hp.pausa_fim, MAKETIME(n.n, 0, 0)), '00:59:59') AS horario_fim
+        FROM usuario u
+        JOIN horario_professor hp ON u.id = hp.usuario_id
+        CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) n
+        WHERE hp.usuario_id = p_id_professor
+        AND ADDTIME(hp.pausa_fim, MAKETIME(n.n, 0, 0)) < hp.fim
+    )
+
+    SELECT 
+        h.nome_completo,
+        h.horario_inicio,
+        h.horario_fim
+    FROM horarios h
+    LEFT JOIN vw_ultima_atualizacao_agendamento a ON (
+        (h.horario_inicio < a.horario_fim AND h.horario_fim > a.horario_inicio)
+        AND a.agendamento_data = p_dia
+        AND a.fk_professor = p_id_professor
+    )
+    WHERE a.fk_status IS NULL OR a.fk_status IN (3, 4, 5); -- Somente horários que não estão ocupados ou que estão com status concluído, cancelado ou transferido
+END //
+
+DELIMITER ;
+
+CALL sp_horarios_disponiveis('2024-10-11', 1);
