@@ -90,7 +90,7 @@ SELECT COUNT(*) AS quantidade_usuarios_novos
 FROM usuario
 WHERE MONTH(data_cadastro) = MONTH(CURRENT_DATE())
 AND YEAR(data_cadastro) = YEAR(CURRENT_DATE())
-AND nivel_acesso_id = 3;
+AND nivel_acesso_id = 1;
 
 SELECT * FROM qtd_novos_alunos;
 
@@ -99,8 +99,8 @@ SELECT * FROM qtd_novos_alunos;
 CREATE VIEW qtd_cancelamento_aulas AS
 SELECT COUNT(*) AS quantidade_cancelamentos
 FROM vw_ultima_atualizacao_agendamento
-WHERE MONTH(data_atualizacao) = MONTH(CURRENT_DATE())
-AND YEAR(data_atualizacao) = YEAR(CURRENT_DATE())
+WHERE MONTH(agendamento_data) = MONTH(CURRENT_DATE())
+AND YEAR(agendamento_data) = YEAR(CURRENT_DATE())
 AND fk_status = (SELECT id FROM status WHERE nome = 'CANCELADO');
 
 select * from qtd_cancelamento_aulas;
@@ -635,7 +635,7 @@ BEGIN
             ADDTIME(ADDTIME(hp.inicio, MAKETIME(n.n, 0, 0)), '00:59:59') AS horario_fim
         FROM usuario u
         JOIN horario_professor hp ON u.id = hp.usuario_id
-        CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) n
+        CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) n
         WHERE hp.usuario_id = p_id_professor
         AND ADDTIME(hp.inicio, MAKETIME(n.n, 0, 0)) < hp.pausa_inicio
         
@@ -648,7 +648,7 @@ BEGIN
             ADDTIME(ADDTIME(hp.pausa_fim, MAKETIME(n.n, 0, 0)), '00:59:59') AS horario_fim
         FROM usuario u
         JOIN horario_professor hp ON u.id = hp.usuario_id
-        CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) n
+        CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) n
         WHERE hp.usuario_id = p_id_professor
         AND ADDTIME(hp.pausa_fim, MAKETIME(n.n, 0, 0)) < hp.fim
     )
