@@ -33,7 +33,7 @@ select * from horario_professor;
 
 -- Metas
 
-INSERT INTO metas (descricao, qtd_aula, usuario_id) VALUES 
+INSERT INTO meta (descricao, qtd_aula, usuario_id) VALUES 
 ('Meta professor 1', 20, 1);  -- Exemplo de usuario_id = 1
 
 -- Nivel Ingles

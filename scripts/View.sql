@@ -562,7 +562,7 @@ BEGIN
     FROM 
         usuario u
     JOIN 
-        metas m ON u.id = m.usuario_id
+        meta m ON u.id = m.usuario_id
     LEFT JOIN 
         vw_ultima_atualizacao_agendamento v ON u.id = v.fk_professor
     WHERE
