@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS horario_professor (
 -- Meta
 CREATE TABLE IF NOT EXISTS meta (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  descricao VARCHAR(255) NOT NULL,
   qtd_aula INT NOT NULL,
   usuario_id INT NOT NULL,
   FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
