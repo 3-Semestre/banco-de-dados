@@ -115,3 +115,57 @@ CREATE TABLE IF NOT EXISTS historico_agendamento (
   FOREIGN KEY (agendamento_id) REFERENCES agendamento (id) ON DELETE CASCADE,
   FOREIGN KEY (status_id) REFERENCES status (id) ON DELETE CASCADE
 );
+
+drop trigger if exists valida_alteracao_status;
+
+DELIMITER //
+
+CREATE TRIGGER valida_alteracao_status
+BEFORE INSERT ON historico_agendamento
+FOR EACH ROW
+BEGIN
+    DECLARE ultimo_status_id INT;
+
+    -- Busca o último status do agendamento
+    SELECT status_id INTO ultimo_status_id
+    FROM historico_agendamento
+    WHERE agendamento_id = NEW.agendamento_id
+    ORDER BY data_atualizacao DESC
+    LIMIT 1;
+
+    -- Verifica se o novo status é 'cancelado' e o agendamento já está cancelado
+    IF NEW.status_id = (SELECT id FROM status WHERE nome = 'CANCELADO') 
+       AND ultimo_status_id = (SELECT id FROM status WHERE nome = 'CANCELADO') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O agendamento já foi cancelado e não pode ser cancelado novamente.';
+
+    -- Verifica se o novo status é 'confirmado' e o agendamento já está confirmado
+    ELSEIF NEW.status_id = (SELECT id FROM status WHERE nome = 'CONFIRMADO') 
+       AND ultimo_status_id = (SELECT id FROM status WHERE nome = 'CONFIRMADO') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O agendamento já está confirmado e não pode ser confirmado novamente.';
+
+    -- Verifica se o novo status é 'pendente' e o agendamento já está pendente
+    ELSEIF NEW.status_id = (SELECT id FROM status WHERE nome = 'PENDENTE') 
+       AND ultimo_status_id = (SELECT id FROM status WHERE nome = 'PENDENTE') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O agendamento já está pendente e não pode ser deixado pendente novamente.';
+
+    -- Verifica se o novo status é 'confirmado' e o agendamento foi transferido
+    ELSEIF NEW.status_id = (SELECT id FROM status WHERE nome = 'CONFIRMADO') 
+       AND ultimo_status_id = (SELECT id FROM status WHERE nome = 'TRANSFERIDO') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Não é possível confirmar um agendamento que foi transferido.';
+
+    -- Verifica se o novo status é 'cancelado' e o agendamento foi transferido
+    ELSEIF NEW.status_id = (SELECT id FROM status WHERE nome = 'CANCELADO') 
+       AND ultimo_status_id = (SELECT id FROM status WHERE nome = 'TRANSFERIDO') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Não é possível cancelar um agendamento que foi transferido.';
+
+    -- Verifica se o novo status é 'cancelado' ou 'pendente' e o agendamento foi concluído
+    ELSEIF (NEW.status_id = (SELECT id FROM status WHERE nome = 'CANCELADO') 
+            OR NEW.status_id = (SELECT id FROM status WHERE nome = 'PENDENTE'))
+       AND ultimo_status_id = (SELECT id FROM status WHERE nome = 'CONCLUIDO') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Não é possível cancelar ou deixar pendente um agendamento que já foi concluído.';
+    END IF;
+
+END;
+//
+
+DELIMITER ;

@@ -428,7 +428,8 @@ SELECT
 	hp.inicio,
 	hp.fim,
 	hp.pausa_inicio,
-	hp.pausa_fim
+	hp.pausa_fim,
+    m.qtd_aula
 FROM
 	usuario as u
 INNER JOIN 
@@ -439,13 +440,17 @@ INNER JOIN
     usuario_nivel_ingles uni ON u.id = uni.usuario_id
 INNER JOIN 
     nivel_ingles ni ON uni.nivel_ingles_id = ni.id
+INNER JOIN 
+    meta m ON u.id = m.usuario_id
 JOIN
 	horario_professor as hp
 ON hp.usuario_id = u.id
 WHERE 
     u.nivel_acesso_id != 1
 GROUP BY 
-    u.id, u.nome_completo, u.cpf, u.data_nascimento, u.profissao, u.telefone, u.email, u.senha, u.nivel_acesso_id, hp.inicio, hp.fim, hp.pausa_inicio, hp.pausa_fim;
+    u.id, u.nome_completo, u.cpf, u.data_nascimento, u.profissao, 
+    u.telefone, u.email, u.senha, u.nivel_acesso_id, 
+    hp.inicio, hp.fim, hp.pausa_inicio, hp.pausa_fim, m.qtd_aula;
 
 select * from perfil_professor;
 /* ID - 18 -> Perfil Aluno*/
