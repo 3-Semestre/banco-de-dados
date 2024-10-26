@@ -685,3 +685,22 @@ END //
 DELIMITER // 
 
 CALL sp_horarios_disponiveis('2024-10-11', 1);
+
+/*ID 25 -> Aulas concluidas de por um professor no mes*/
+DELIMITER //
+
+CREATE PROCEDURE aulas_concluidas_professor(IN p_fk_professor INT)
+BEGIN
+    SELECT 
+        COUNT(*) AS quantidade_aulas_concluidas
+    FROM 
+        vw_ultima_atualizacao_agendamento
+    WHERE 
+        fk_professor = p_fk_professor
+        AND fk_status = 3 
+        AND YEAR(agendamento_data) = YEAR(CURRENT_DATE());
+END //
+
+DELIMITER ;
+
+CALL aulas_concluidas_professor(1);  
