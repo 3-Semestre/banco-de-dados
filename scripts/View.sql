@@ -490,23 +490,40 @@ DELIMITER //
 CREATE PROCEDURE taxa_cancelamento_mensal(IN fk_professor INT)
 BEGIN
     SELECT 
-        CONCAT(meses_ano.nome_mes, ' ', YEAR(CURRENT_DATE)) AS mes_ano,
-        COALESCE(ROUND((SUM(CASE WHEN s.nome = 'CANCELADO' THEN 1 ELSE 0 END) / NULLIF(COUNT(vw.fk_agendamento), 0)) * 100, 2), 0) AS taxa_cancelamento
-    FROM 
-        meses_ano
-    LEFT JOIN 
-        vw_ultima_atualizacao_agendamento vw ON MONTH(vw.agendamento_data) = meses_ano.mes
-    LEFT JOIN 
-        status s ON vw.fk_status = s.id
-    WHERE 
-        vw.fk_professor = fk_professor  -- Filtro apenas pelo ID do professor
-    GROUP BY 
-        meses_ano.mes, meses_ano.nome_mes  -- Inclua nome_mes na cláusula GROUP BY
-    ORDER BY 
-        meses_ano.mes;
+    CONCAT(
+        CASE MONTH(vw.agendamento_data)
+            WHEN 1 THEN 'Janeiro'
+            WHEN 2 THEN 'Fevereiro'
+            WHEN 3 THEN 'Março'
+            WHEN 4 THEN 'Abril'
+            WHEN 5 THEN 'Maio'
+            WHEN 6 THEN 'Junho'
+            WHEN 7 THEN 'Julho'
+            WHEN 8 THEN 'Agosto'
+            WHEN 9 THEN 'Setembro'
+            WHEN 10 THEN 'Outubro'
+            WHEN 11 THEN 'Novembro'
+            WHEN 12 THEN 'Dezembro'
+        END, ' ', YEAR(vw.agendamento_data)
+    ) AS mes_ano,
+    COALESCE(ROUND((SUM(CASE WHEN s.nome = 'CANCELADO' THEN 1 ELSE 0 END) / NULLIF(COUNT(vw.fk_agendamento), 0)) * 100, 2), 0) AS taxa_cancelamento
+FROM 
+    vw_ultima_atualizacao_agendamento vw
+LEFT JOIN 
+    status s ON vw.fk_status = s.id
+WHERE 
+    vw.fk_professor = fk_professor  -- Filtro pelo ID do professor
+GROUP BY 
+    mes_ano, MONTH(vw.agendamento_data), YEAR(vw.agendamento_data)  -- Agrupa pelo mes_ano e os componentes da data
+ORDER BY 
+    YEAR(vw.agendamento_data), MONTH(vw.agendamento_data)  -- Ordena pelo ano e mês
+LIMIT 0, 400;
 END //
-
 DELIMITER ;
+
+CALL taxa_cancelamento_mensal(1);
+
+DELIMITER // 
 
 CALL taxa_cancelamento_mensal(1);
 
@@ -689,18 +706,83 @@ CALL sp_horarios_disponiveis('2024-10-11', 1);
 /*ID 25 -> Aulas concluidas de por um professor no mes*/
 DELIMITER //
 
-CREATE PROCEDURE aulas_concluidas_professor(IN p_fk_professor INT)
+CREATE PROCEDURE aulas_concluidas_professor(
+    IN p_fk_professor INT,
+    IN p_mes INT
+)
 BEGIN
     SELECT 
-        COUNT(*) AS quantidade_aulas_concluidas
+        CASE p_mes
+            WHEN 1 THEN 'Janeiro'
+            WHEN 2 THEN 'Fevereiro'
+            WHEN 3 THEN 'Março'
+            WHEN 4 THEN 'Abril'
+            WHEN 5 THEN 'Maio'
+            WHEN 6 THEN 'Junho'
+            WHEN 7 THEN 'Julho'
+            WHEN 8 THEN 'Agosto'
+            WHEN 9 THEN 'Setembro'
+            WHEN 10 THEN 'Outubro'
+            WHEN 11 THEN 'Novembro'
+            WHEN 12 THEN 'Dezembro'
+        END AS mes,
+        IFNULL(COUNT(*), 0) AS quantidade_aulas_concluidas
     FROM 
         vw_ultima_atualizacao_agendamento
     WHERE 
         fk_professor = p_fk_professor
-        AND fk_status = 3 
-        AND YEAR(agendamento_data) = YEAR(CURRENT_DATE());
+        AND fk_status = 3
+        AND YEAR(agendamento_data) = YEAR(CURRENT_DATE())
+        AND MONTH(agendamento_data) = p_mes  -- Filtra pelo mês fornecido
+    GROUP BY 
+        p_mes  -- Agrupa pelo mês fornecido
+    ORDER BY 
+        p_mes;  -- Ordena pelo mês fornecido
 END //
 
 DELIMITER ;
 
-CALL aulas_concluidas_professor(1);  
+CALL aulas_concluidas_professor(1, 10);  
+
+/*ID 26 -> Aulas concluidas de por um professor de todos os meses por ano*/
+
+DELIMITER //
+
+CREATE PROCEDURE aulas_concluidas_todos_meses(
+    IN p_fk_professor INT,
+    IN p_ano INT
+)
+BEGIN
+    -- Tabela temporária de referência para os meses
+    SELECT 
+        meses.mes_nome AS mes,
+        IFNULL(COUNT(vw.fk_agendamento), 0) AS quantidade_aulas_concluidas
+    FROM 
+        (SELECT 1 AS mes_num, 'Janeiro' AS mes_nome
+         UNION SELECT 2, 'Fevereiro'
+         UNION SELECT 3, 'Março'
+         UNION SELECT 4, 'Abril'
+         UNION SELECT 5, 'Maio'
+         UNION SELECT 6, 'Junho'
+         UNION SELECT 7, 'Julho'
+         UNION SELECT 8, 'Agosto'
+         UNION SELECT 9, 'Setembro'
+         UNION SELECT 10, 'Outubro'
+         UNION SELECT 11, 'Novembro'
+         UNION SELECT 12, 'Dezembro') AS meses
+    LEFT JOIN vw_ultima_atualizacao_agendamento vw ON
+        meses.mes_num = MONTH(vw.agendamento_data) 
+        AND vw.fk_professor = p_fk_professor
+        AND vw.fk_status = 3  -- Status de aula concluída
+        AND YEAR(vw.agendamento_data) = p_ano
+    GROUP BY 
+        meses.mes_num, meses.mes_nome
+    ORDER BY 
+        meses.mes_num;
+
+END //
+
+DELIMITER ;
+
+call aulas_concluidas_todos_meses(1, 2024);
+
