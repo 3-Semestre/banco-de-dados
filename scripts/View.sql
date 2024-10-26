@@ -485,20 +485,30 @@ GROUP BY
     u.id, u.nome_completo;
 
 /* ID - 19 -> TAXA DE CANCELAMENTO MENSAL*/
-CREATE VIEW taxa_cancelamento_mensal AS
-SELECT 
-    CONCAT(YEAR(MIN(vw.agendamento_data)), '-', LPAD(MONTH(MIN(vw.agendamento_data)), 2, '0')) AS mes_ano,
-    ROUND((SUM(CASE WHEN s.nome = 'CANCELADO' THEN 1 ELSE 0 END) / COUNT(vw.fk_agendamento)) * 100, 2) AS taxa_cancelamento
-FROM 
-    vw_ultima_atualizacao_agendamento vw
-JOIN 
-    status s ON vw.fk_status = s.id
-GROUP BY 
-    YEAR(vw.agendamento_data), MONTH(vw.agendamento_data)
-ORDER BY 
-    YEAR(vw.agendamento_data), MONTH(vw.agendamento_data);
-    
-select * from taxa_cancelamento_mensal;
+DELIMITER //
+
+CREATE PROCEDURE taxa_cancelamento_mensal(IN fk_professor INT)
+BEGIN
+    SELECT 
+        CONCAT(meses_ano.nome_mes, ' ', YEAR(CURRENT_DATE)) AS mes_ano,
+        COALESCE(ROUND((SUM(CASE WHEN s.nome = 'CANCELADO' THEN 1 ELSE 0 END) / NULLIF(COUNT(vw.fk_agendamento), 0)) * 100, 2), 0) AS taxa_cancelamento
+    FROM 
+        meses_ano
+    LEFT JOIN 
+        vw_ultima_atualizacao_agendamento vw ON MONTH(vw.agendamento_data) = meses_ano.mes
+    LEFT JOIN 
+        status s ON vw.fk_status = s.id
+    WHERE 
+        vw.fk_professor = fk_professor  -- Filtro apenas pelo ID do professor
+    GROUP BY 
+        meses_ano.mes, meses_ano.nome_mes  -- Inclua nome_mes na cláusula GROUP BY
+    ORDER BY 
+        meses_ano.mes;
+END //
+
+DELIMITER ;
+
+CALL taxa_cancelamento_mensal(1);
 
 /* ID - 20 -> Agendamento detalhado */
 CREATE VIEW agendamentos_detalhes AS
