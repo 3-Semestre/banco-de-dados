@@ -584,7 +584,7 @@ BEGIN
 END //
 DELIMITER ;
  
- CALL taxa_cumprimento_metas(3);
+ CALL taxa_cumprimento_metas(1);
 
 /*ID -24 -> Quantidade de alunos por mes */
 DELIMITER //
