@@ -62,7 +62,7 @@ CALL proximos_tres_agendamento_P(1);
 /* ID 02-> Buscar a qtd de aulas agendadas para aquele mes */
 DELIMITER //
 
-CREATE PROCEDURE qtd_agendamento_mes(IN p_mes INT, IN p_ano INT)
+CREATE PROCEDURE qtd_agendamento_mes(IN p_mes INT, IN p_ano INT, IN professor_id INT)
 BEGIN
     SELECT COUNT(*) AS quantidade_agendamentos_confirmados
     FROM (
@@ -71,13 +71,14 @@ BEGIN
         JOIN vw_ultima_atualizacao_agendamento ua ON a.id = ua.fk_agendamento
         JOIN status s ON ua.fk_status = s.id
         WHERE MONTH(a.data) = p_mes AND YEAR(a.data) = p_ano
-        AND s.nome = 'CONFIRMADO'
+        AND s.nome IN ('CONFIRMADO', 'CONCLUIDO')
+        AND ua.fk_professor = professor_id
     ) AS subquery;
 END //
 
 DELIMITER ;
 
-CALL qtd_agendamento_mes(8, 2024);
+CALL qtd_agendamento_mes(8, 2024, 1);
 
 /* ID - 03 -> Tempo confirmação agendamento */
 
