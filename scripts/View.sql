@@ -643,9 +643,9 @@ BEGIN
         CROSS JOIN (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) n
         WHERE hp.usuario_id = p_id_professor
         AND ADDTIME(hp.inicio, MAKETIME(n.n, 0, 0)) < hp.pausa_inicio
-        
+
         UNION ALL
-        
+
         -- Gerar horas dentro do intervalo de trabalho depois da pausa
         SELECT 
             u.nome_completo,
@@ -658,7 +658,7 @@ BEGIN
         AND ADDTIME(hp.pausa_fim, MAKETIME(n.n, 0, 0)) < hp.fim
     )
 
-    SELECT 
+    SELECT DISTINCT
         h.nome_completo,
         h.horario_inicio,
         h.horario_fim
@@ -668,9 +668,9 @@ BEGIN
         AND a.agendamento_data = p_dia
         AND a.fk_professor = p_id_professor
     )
-    WHERE a.fk_status IS NULL OR a.fk_status IN (3, 4, 5); -- Somente horários que não estão ocupados ou que estão com status concluído, cancelado ou transferido
+    WHERE a.fk_status IS NULL OR a.fk_status IN (3, 4, 5);
 END //
 
-DELIMITER ;
+DELIMITER // 
 
 CALL sp_horarios_disponiveis('2024-10-11', 1);
