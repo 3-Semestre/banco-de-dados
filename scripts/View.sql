@@ -523,10 +523,6 @@ DELIMITER ;
 
 CALL taxa_cancelamento_mensal(1);
 
-DELIMITER // 
-
-CALL taxa_cancelamento_mensal(1);
-
 /* ID - 20 -> Agendamento detalhado */
 CREATE VIEW agendamentos_detalhes AS
 SELECT 
