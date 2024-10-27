@@ -786,3 +786,40 @@ DELIMITER ;
 
 call aulas_concluidas_todos_meses(1, 2024);
 
+/*ID 27 -> Horarios disponiveis para um professor agendar*/
+
+DELIMITER //
+
+CREATE PROCEDURE sp_professores_disponiveis_transferencia (
+    IN p_dia DATE,
+    IN p_horario_inicio TIME,
+    IN p_horario_fim TIME
+)
+BEGIN
+    WITH professores AS (
+        SELECT 
+            u.id AS professor_id,
+            u.nome_completo
+        FROM usuario u
+        JOIN horario_professor hp ON u.id = hp.usuario_id
+        WHERE 
+            -- Verifica se o horário de trabalho do professor inclui o intervalo solicitado
+            hp.inicio <= p_horario_inicio 
+            AND hp.fim >= p_horario_fim
+    )
+    
+    SELECT DISTINCT
+        p.professor_id,
+        p.nome_completo
+    FROM professores p
+    LEFT JOIN vw_ultima_atualizacao_agendamento a ON (
+        (p_horario_inicio < a.horario_fim AND p_horario_fim > a.horario_inicio)
+        AND a.agendamento_data = p_dia
+        AND a.fk_professor = p.professor_id
+    )
+    WHERE a.fk_status IS NULL OR a.fk_status IN (3, 4, 5); -- Status disponíveis
+END //
+
+DELIMITER ;
+
+CALL sp_professores_disponiveis_transferencia('2024-11-14', '15:30:00', '1	6:29:00');
