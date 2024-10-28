@@ -185,7 +185,15 @@ INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professo
 ('2024-07-08', '08:00:00', '08:59:00', 'Aula de Conversação', 1, 27),
 ('2024-08-22', '13:00:00', '13:59:00', 'Aula de Escrita', 1, 28),
 ('2024-09-10', '09:00:00', '09:59:00', 'Aula de Gramática', 1, 29),
-('2024-10-18', '10:00:00', '10:59:00', 'Aula de Leitura', 1, 30);
+('2024-10-18', '10:00:00', '10:59:00', 'Aula de Leitura', 1, 30),
+('2024-01-15', '09:00:00', '09:59:00', 'Aula de Conversação', 1, 40),
+('2024-02-20', '10:00:00', '10:59:00', 'Aula de Gramática', 2, 40),
+('2024-03-18', '11:00:00', '11:59:00', 'Aula de Escrita', 3, 40),
+('2024-04-22', '14:00:00', '14:59:00', 'Aula de Pronúncia', 4, 40),
+('2024-05-12', '15:00:00', '15:59:00', 'Aula de Leitura', 1, 40),
+('2024-06-05', '16:00:00', '16:59:00', 'Aula de Vocabulário', 2, 40),
+('2024-07-25', '08:00:00', '08:59:00', 'Aula de Conversação', 3, 40),
+('2024-08-10', '13:00:00', '13:59:00', 'Aula de Gramática', 4, 40);
 
 
 INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
@@ -295,6 +303,123 @@ INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) 
 ('2024-09-10', 47, 3), -- Concluído
 ('2024-10-18', 48, 1), -- Pendente
 ('2024-10-18', 48, 2), -- Confirmado
-('2024-10-18', 48, 3);
+('2024-10-18', 48, 3),
+('2024-01-15', 49, 1), -- Pendente
+('2024-01-15', 49, 2), -- Confirmado
+('2024-01-15', 49, 3), -- Concluído
+('2024-01-16', 50, 2), -- Confirmado
+('2024-01-17', 50, 3), -- Concluído
+('2024-02-20', 51, 1), -- Pendente
+('2024-02-21', 51, 4), -- Cancelado
+('2024-03-18', 52, 1), -- Pendente
+('2024-03-19', 52, 2), -- Confirmado
+('2024-03-20', 52, 3), -- Concluído
+('2024-04-22', 53, 1), -- Pendente
+('2024-04-23', 53, 5), -- Transferido
+('2024-05-12', 54, 1), -- Pendente
+('2024-05-13', 54, 2), -- Confirmado
+('2024-05-14', 54, 3), -- Concluído
+('2024-06-05', 55, 1), -- Pendente
+('2024-06-06', 55, 4), -- Cancelado
+('2024-07-25', 56, 1), -- Pendente
+('2024-07-26', 56, 2), -- Confirmado
+('2024-07-27', 56, 3), -- Concluído
+('2024-08-10', 57, 1), -- Pendente
+('2024-08-11', 57, 5); -- Transferido
 
+-- Inserções adicionais na tabela de agendamentos de janeiro a agosto para fk_aluno 40, continuando a partir do agendamento_id 57
+INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professor, fk_aluno) VALUES 
+('2024-01-22', '09:00:00', '09:59:00', 'Aula de Pronúncia', 4, 40),
+('2024-02-25', '10:00:00', '10:59:00', 'Aula de Vocabulário', 3, 40),
+('2024-03-28', '11:00:00', '11:59:00', 'Aula de Gramática', 2, 40),
+('2024-04-05', '13:00:00', '13:59:00', 'Aula de Escrita', 1, 40),
+('2024-05-15', '14:00:00', '14:59:00', 'Aula de Conversação', 4, 40),
+('2024-06-10', '15:00:00', '15:59:00', 'Aula de Pronúncia', 3, 40),
+('2024-07-12', '16:00:00', '16:59:00', 'Aula de Leitura', 2, 40),
+('2024-08-18', '08:00:00', '08:59:00', 'Aula de Conversação', 1, 40);
 
+-- Inserções na tabela de histórico de agendamento para esses agendamentos com status variados
+INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
+('2024-01-22', 59, 1), -- Pendente
+('2024-01-23', 59, 2), -- Confirmado
+('2024-01-24', 59, 3), -- Concluído
+('2024-02-25', 60, 1), -- Pendente
+('2024-02-26', 60, 4), -- Cancelado
+('2024-03-28', 61, 1), -- Pendente
+('2024-03-29', 61, 5), -- Transferido
+('2024-04-05', 62, 1), -- Pendente
+('2024-04-06', 62, 2), -- Confirmado
+('2024-04-07', 62, 3), -- Concluído
+('2024-05-15', 63, 1), -- Pendente
+('2024-05-16', 63, 4), -- Cancelado
+('2024-06-10', 64, 1), -- Pendente
+('2024-06-11', 64, 2), -- Confirmado
+('2024-06-12', 64, 3), -- Concluído
+('2024-07-12', 65, 1), -- Pendente
+('2024-07-13', 65, 5), -- Transferido
+('2024-08-18', 66, 1), -- Pendente
+('2024-08-19', 66, 2), -- Confirmado
+('2024-08-20', 66, 3); -- Concluído
+
+-- Inserções adicionais na tabela de agendamentos de janeiro a agosto para fk_aluno 40, continuando a partir do agendamento_id 66
+INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professor, fk_aluno) VALUES 
+('2024-01-30', '09:00:00', '09:59:00', 'Aula de Gramática', 2, 40),
+('2024-02-18', '11:00:00', '11:59:00', 'Aula de Conversação', 3, 40),
+('2024-03-15', '14:00:00', '14:59:00', 'Aula de Pronúncia', 4, 40),
+('2024-04-10', '15:00:00', '15:59:00', 'Aula de Escrita', 1, 40),
+('2024-05-22', '13:00:00', '13:59:00', 'Aula de Leitura', 3, 40),
+('2024-06-20', '10:00:00', '10:59:00', 'Aula de Vocabulário', 2, 40),
+('2024-07-29', '16:00:00', '16:59:00', 'Aula de Gramática', 4, 40),
+('2024-08-05', '08:00:00', '08:59:00', 'Aula de Conversação', 1, 40);
+
+-- Inserções na tabela de histórico de agendamento para esses agendamentos com status variados
+INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
+('2024-01-30', 67, 1), -- Pendente
+('2024-01-31', 67, 3), -- Concluído
+('2024-02-18', 68, 1), -- Pendente
+('2024-02-19', 68, 2), -- Confirmado
+('2024-02-20', 68, 3), -- Concluído
+('2024-03-15', 69, 1), -- Pendente
+('2024-03-16', 69, 4), -- Cancelado
+('2024-04-10', 70, 1), -- Pendente
+('2024-04-11', 70, 5), -- Transferido
+('2024-05-22', 71, 1), -- Pendente
+('2024-05-23', 71, 2), -- Confirmado
+('2024-05-24', 71, 3), -- Concluído
+('2024-06-20', 72, 1), -- Pendente
+('2024-06-21', 72, 4), -- Cancelado
+('2024-07-29', 73, 1), -- Pendente
+('2024-07-30', 73, 5), -- Transferido
+('2024-08-05', 74, 1), -- Pendente
+('2024-08-06', 74, 2), -- Confirmado
+('2024-08-07', 74, 3); -- Concluído
+
+-- Inserções adicionais na tabela de agendamentos para janeiro, fevereiro e maio para fk_aluno 40
+INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professor, fk_aluno) VALUES 
+('2024-01-17', '09:00:00', '09:59:00', 'Aula de Vocabulário', 1, 40),
+('2024-01-24', '11:00:00', '11:59:00', 'Aula de Conversação', 2, 40),
+('2024-02-01', '14:00:00', '14:59:00', 'Aula de Leitura', 3, 40),
+('2024-02-15', '15:00:00', '15:59:00', 'Aula de Escrita', 4, 40),
+('2024-05-10', '08:00:00', '08:59:00', 'Aula de Pronúncia', 1, 40),
+('2024-05-20', '10:00:00', '10:59:00', 'Aula de Gramática', 2, 40),
+('2024-05-25', '13:00:00', '13:59:00', 'Aula de Conversação', 3, 40);
+
+-- Inserções na tabela de histórico de agendamento para esses agendamentos com status variados
+INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
+('2024-01-17', 75, 1), -- Pendente
+('2024-01-18', 75, 2), -- Confirmado
+('2024-01-19', 75, 3), -- Concluído
+('2024-01-24', 76, 1), -- Pendente
+('2024-01-25', 76, 5), -- Transferido
+('2024-02-01', 77, 1), -- Pendente
+('2024-02-02', 77, 4), -- Cancelado
+('2024-02-15', 78, 1), -- Pendente
+('2024-02-16', 78, 2), -- Confirmado
+('2024-02-17', 78, 3), -- Concluído
+('2024-05-10', 79, 1), -- Pendente
+('2024-05-11', 79, 4), -- Cancelado
+('2024-05-20', 80, 1), -- Pendente
+('2024-05-21', 80, 2), -- Confirmado
+('2024-05-22', 80, 3), -- Concluído
+('2024-05-25', 81, 1), -- Pendente
+('2024-05-26', 81, 5); -- Transferido
