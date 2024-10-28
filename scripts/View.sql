@@ -818,4 +818,4 @@ END //
 
 DELIMITER ;
 
-CALL sp_professores_disponiveis_transferencia('2024-11-14', '15:30:00', '1	6:29:00');
+CALL sp_professores_disponiveis_transferencia('2024-11-14', '15:30:00', '16:29:00');
