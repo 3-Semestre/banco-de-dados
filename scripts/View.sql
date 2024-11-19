@@ -424,6 +424,7 @@ SELECT
 	u.email,
 	u.senha,
 	u.nivel_acesso_id,
+	sit.nome as status,
     GROUP_CONCAT(DISTINCT n.nome ORDER BY n.nome ASC SEPARATOR ', ') AS nichos,
     GROUP_CONCAT(DISTINCT ni.nome ORDER BY ni.nome ASC SEPARATOR ', ') AS niveis_ingles,
 	hp.inicio,
@@ -433,6 +434,8 @@ SELECT
     m.qtd_aula
 FROM
 	usuario as u
+INNER JOIN 
+    situacao sit ON u.situacao_id = sit.id
 INNER JOIN 
     usuario_nicho un ON u.id = un.usuario_id
 INNER JOIN 
