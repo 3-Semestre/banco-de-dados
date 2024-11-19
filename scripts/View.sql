@@ -467,6 +467,7 @@ SELECT
 	u.email,
 	u.senha,
 	u.nivel_acesso_id,
+    sit.nome as status,
     GROUP_CONCAT(DISTINCT n.nome ORDER BY n.nome ASC SEPARATOR ', ') AS nichos,
     GROUP_CONCAT(DISTINCT ni.nome ORDER BY ni.nome ASC SEPARATOR ', ') AS niveis_ingles
 FROM 
@@ -479,10 +480,14 @@ INNER JOIN
     usuario_nivel_ingles uni ON u.id = uni.usuario_id
 INNER JOIN 
     nivel_ingles ni ON uni.nivel_ingles_id = ni.id
+INNER JOIN 
+    situacao sit ON u.situacao_id = sit.id
 WHERE 
     u.nivel_acesso_id = 1
 GROUP BY 
     u.id, u.nome_completo;
+
+select * from perfil
 
 /* ID - 19 -> TAXA DE CANCELAMENTO MENSAL*/
 DELIMITER //
