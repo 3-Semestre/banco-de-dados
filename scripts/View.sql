@@ -590,7 +590,11 @@ call aulas_transferidas_por_professor (1);
 
 /*ID - 23 -> Metas*/
 DELIMITER //
-CREATE PROCEDURE taxa_cumprimento_metas(IN id_professor INT)
+CREATE PROCEDURE taxa_cumprimento_metas(
+    IN id_professor INT,
+    IN ano INT,
+    IN mes INT
+)
 BEGIN
     SELECT  
         u.id AS professor_id,
@@ -603,9 +607,9 @@ BEGIN
     LEFT JOIN 
         vw_ultima_atualizacao_agendamento v ON u.id = v.fk_professor
     WHERE
-        v.fk_professor = id_professor
-        AND DATE(v.agendamento_data) >= DATE_FORMAT(CURRENT_DATE, '%Y-%m-01')
-        AND DATE(v.agendamento_data) < DATE_FORMAT(DATE_ADD(CURRENT_DATE, INTERVAL 1 MONTH), '%Y-%m-01')
+        u.id = id_professor
+        AND YEAR(v.agendamento_data) = ano  -- Filtra pelo ano especificado
+        AND MONTH(v.agendamento_data) = mes -- Filtra pelo mês especificado
         AND v.fk_status = 3  -- Filtra apenas agendamentos com status igual a 3
         AND m.qtd_aula > 0  -- Evita divisão por zero
     GROUP BY 
@@ -615,7 +619,7 @@ BEGIN
 END //
 DELIMITER ;
  
- CALL taxa_cumprimento_metas(1);
+ CALL taxa_cumprimento_metas(1, 2024, 12);
 
 /*ID -24 -> Quantidade de alunos por mes */
 DELIMITER //
