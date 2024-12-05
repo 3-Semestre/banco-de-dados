@@ -279,7 +279,7 @@ DELIMITER //
 
 /* ID 13 -> Quantidade de aulas por cada mês */
 
-CREATE PROCEDURE visao_por_mes(IN p_fk_aluno INT)
+CREATE PROCEDURE visao_por_mes(IN p_fk_aluno INT, IN p_ano INT)
 BEGIN
     SELECT
         CASE MONTH(a.data)
@@ -303,8 +303,8 @@ BEGIN
         vw_ultima_atualizacao_agendamento v ON a.id = v.fk_agendamento
     WHERE
         v.fk_status = 3
-        AND a.fk_aluno = p_fk_aluno  -- Parâmetro para o ID do aluno
-        AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR) <= a.data
+        AND a.fk_aluno = p_fk_aluno 
+        AND YEAR(a.data) = p_ano     
     GROUP BY
         mes, MONTH(a.data)
     ORDER BY
@@ -313,7 +313,7 @@ END //
 
 DELIMITER ;
 
-CALL visao_por_mes(2);
+CALL visao_por_mes(40, 2024);
 
 /*ID 14 -> Top 3 mese que mais teve aula */
 
