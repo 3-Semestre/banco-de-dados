@@ -71,14 +71,36 @@ BEGIN
         JOIN vw_ultima_atualizacao_agendamento ua ON a.id = ua.fk_agendamento
         JOIN status s ON ua.fk_status = s.id
         WHERE MONTH(a.data) = p_mes AND YEAR(a.data) = p_ano
-        AND s.nome IN ('CONFIRMADO', 'CONCLUIDO')
+        AND s.nome IN ('CONFIRMADO', 'CONCLUIDO', 'TRANSFERIDO', 'CANCELADO')
         AND ua.fk_professor = professor_id
     ) AS subquery;
 END //
 
 DELIMITER ;
+SELECT * FROM STATUS;
 
 CALL qtd_agendamento_mes(8, 2024, 1);
+
+DELIMITER //
+
+CREATE PROCEDURE qtd_aulas_confirmadas_mes(
+    IN p_fk_professor INT,
+    IN p_mes INT,
+    IN p_ano INT
+)
+BEGIN
+    SELECT COUNT(*) AS quantidade_aulas_confirmadas
+    FROM vw_ultima_atualizacao_agendamento
+    WHERE fk_status = (SELECT id FROM status WHERE nome = 'CONFIRMADO') -- Status Confirmado
+      AND fk_professor = p_fk_professor -- Filtro pelo professor
+      AND MONTH(agendamento_data) = p_mes -- Filtro pelo mês
+      AND YEAR(agendamento_data) = p_ano; -- Filtro pelo ano
+END //
+
+DELIMITER ;
+
+CALL qtd_aulas_confirmadas_mes(1, 12, 2024);
+
 
 /* ID - 03 -> Tempo confirmação agendamento */
 
@@ -562,7 +584,7 @@ BEGIN
     FROM vw_ultima_atualizacao_agendamento v
     JOIN status s ON v.fk_status = s.id
     WHERE s.nome = 'CANCELADO'
-      AND MONTH(v.data_atualizacao) = MONTH(CURDATE())
+      AND MONTH(v.agendamento_data) = MONTH(CURDATE())
       AND YEAR(v.data_atualizacao) = YEAR(CURDATE())
       AND v.fk_professor = p_usuario_id;
 END //

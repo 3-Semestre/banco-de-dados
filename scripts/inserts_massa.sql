@@ -3,7 +3,7 @@ INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastr
 ('Cristian Alborghetti', '300.261.160-30', '11092378173', '1985-05-15', '2024-06-05', TRUE, 'Professor de Inglês', 'cristian@email.com', 'cristian123', 3, 1),
 ('Maria Oliveira', '987.654.321-00', '(21) 98765-4321', '1990-07-22', CURDATE(), 1, 'Professora de Inglês', 'maria.oliveira2@email.com', 'senha456', 2, 1),
 ('Carlos Pereira', '234.567.890-11', '(31) 92345-6789', '1982-09-10', CURDATE(), 1, 'Professor de Inglês', 'carlos.pereira3@email.com', 'senha789', 2, 1),
-('Fepile Alborghetti', '546.097.435-00', '11092378173', '1985-05-15', '2024-06-05', 1, 'Professor de Inglês', 'fepile.alborghetti@email.com', 'felipe123', 2, 1),
+('Felipe Alborghetti', '546.097.435-00', '11092378173', '1985-05-15', '2024-06-05', 1, 'Professor de Inglês', 'felipe.alborghetti@email.com', 'felipe123', 2, 1),
 ('Pedro Santos', '456.789.012-33', '(51) 94567-8901', '1991-06-25', CURDATE(), 1, 'Professor de Inglês', 'pedro.santos5@email.com', 'senha654', 2, 1),
 ('Juliana Rocha', '567.890.123-44', '(61) 95678-9012', '1993-03-05', CURDATE(), 1, 'Professora de Inglês', 'juliana.rocha6@email.com', 'senha987', 2, 1),
 ('Marcos Lima', '678.901.234-55', '(71) 96789-0123', '1987-08-18', CURDATE(), 1, 'Professor de Inglês', 'marcos.lima7@email.com', 'senha432', 2, 1),
@@ -22,6 +22,7 @@ INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastr
 ('Patricia Santos', '901.234.567-99', '(41) 91234-5678', '1995-04-07', CURDATE(), 1, 'Professora de Inglês', 'patricia.santos20@email.com', 'senha456', 2, 1);
 
 -- Inserir metas para cada professor
+select*from meta;
 INSERT INTO meta (qtd_aula, usuario_id) VALUES 
 (20, 1), (22, 2), (25, 3), (18, 4), (24, 5),
 (20, 6), (19, 7), (26, 8), (21, 9), (23, 10),
@@ -98,6 +99,7 @@ INSERT INTO usuario_nicho (usuario_id, nicho_id) VALUES
 (20, 1), (20, 4);
 
 -- Inserir 20 alunos na tabela usuario
+select * from usuario;
 INSERT INTO usuario (nome_completo, cpf, telefone, data_nascimento, data_cadastro, autenticado, profissao, email, senha, nivel_acesso_id, situacao_id) VALUES 
 ('Lucas Pereira', '111.222.333-01', '(11) 91234-1111', '2002-03-15', CURDATE(), 1, 'Estudante', 'lucas.pereira@email.com', 'senha123', 1, 1),
 ('Beatriz Souza', '222.333.444-02', '(21) 92345-1112', '2001-08-20', CURDATE(), 1, 'Estudante', 'beatriz.souza@email.com', 'senha456', 1, 1),
@@ -194,8 +196,8 @@ INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professo
 ('2024-06-05', '16:00:00', '16:59:00', 'Aula de Vocabulário', 2, 40),
 ('2024-07-25', '08:00:00', '08:59:00', 'Aula de Conversação', 3, 40),
 ('2024-08-10', '13:00:00', '13:59:00', 'Aula de Gramática', 4, 40);
-
-
+select * from agendamento;
+SELECT * FROM historico_agendamento;
 INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
 ('2024-09-07', 1, 1), -- Pendente
 ('2024-09-07', 1, 2), -- Confirmado
@@ -423,3 +425,180 @@ INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) 
 ('2024-05-22', 80, 3), -- Concluído
 ('2024-05-25', 81, 1), -- Pendente
 ('2024-05-26', 81, 5); -- Transferido
+
+
+INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professor, fk_aluno) VALUES 
+('2024-12-08', '08:00:00', '08:59:00', 'Aula de Inglês', 1, 40),
+('2024-12-07', '08:00:00', '08:59:00', 'Aula de Inglês', 4, 40),
+('2024-12-06', '09:00:00', '09:59:00', 'Aula de Conversação', 1, 22),
+('2024-12-05', '10:00:00', '10:59:00', 'Aula de Escrita', 4, 40),
+('2024-12-04', '11:00:00', '11:59:00', 'Aula de Pronúncia', 1, 23),
+('2024-12-03', '14:00:00', '14:59:00', 'Aula de Gramática', 4, 24),
+('2024-12-02', '15:00:00', '15:59:00', 'Aula de Leitura', 1, 40),
+('2024-12-01', '08:00:00', '08:59:00', 'Aula de Vocabulário', 4, 25),
+('2024-11-30', '09:00:00', '09:59:00', 'Aula de Conversação', 1, 40),
+('2024-11-29', '10:00:00', '10:59:00', 'Aula de Inglês', 4, 26),
+('2024-11-28', '08:00:00', '08:59:00', 'Aula de Pronúncia', 1, 40),
+('2024-11-27', '09:00:00', '09:59:00', 'Aula de Gramática', 4, 27),
+('2024-11-26', '10:00:00', '10:59:00', 'Aula de Escrita', 1, 40),
+('2024-11-25', '11:00:00', '11:59:00', 'Aula de Leitura', 4, 28),
+('2024-11-24', '14:00:00', '14:59:00', 'Aula de Inglês', 1, 40),
+('2024-11-23', '15:00:00', '15:59:00', 'Aula de Vocabulário', 4, 29),
+('2024-11-22', '08:00:00', '08:59:00', 'Aula de Conversação', 1, 40),
+('2024-11-21', '09:00:00', '09:59:00', 'Aula de Gramática', 4, 30),
+('2024-11-20', '10:00:00', '10:59:00', 'Aula de Pronúncia', 1, 40),
+('2024-11-19', '11:00:00', '11:59:00', 'Aula de Inglês', 4, 31),
+('2024-11-18', '14:00:00', '14:59:00', 'Aula de Leitura', 1, 40),
+('2024-11-17', '15:00:00', '15:59:00', 'Aula de Escrita', 4, 32),
+('2024-11-16', '08:00:00', '08:59:00', 'Aula de Conversação', 1, 40),
+('2024-11-15', '09:00:00', '09:59:00', 'Aula de Gramática', 4, 33),
+('2024-11-14', '10:00:00', '10:59:00', 'Aula de Vocabulário', 1, 40),
+('2024-11-13', '11:00:00', '11:59:00', 'Aula de Pronúncia', 4, 34),
+('2024-11-12', '14:00:00', '14:59:00', 'Aula de Inglês', 1, 40),
+('2024-11-11', '15:00:00', '15:59:00', 'Aula de Leitura', 4, 35),
+('2024-11-10', '08:00:00', '08:59:00', 'Aula de Escrita', 1, 40),
+('2024-11-09', '09:00:00', '09:59:00', 'Aula de Conversação', 4, 36),
+('2024-11-08', '10:00:00', '10:59:00', 'Aula de Inglês', 1, 40),
+('2024-11-07', '11:00:00', '11:59:00', 'Aula de Gramática', 4, 37),
+('2024-11-06', '14:00:00', '14:59:00', 'Aula de Pronúncia', 1, 40),
+('2024-11-05', '15:00:00', '15:59:00', 'Aula de Vocabulário', 4, 38),
+('2024-11-04', '08:00:00', '08:59:00', 'Aula de Escrita', 1, 40),
+('2024-11-03', '09:00:00', '09:59:00', 'Aula de Inglês', 4, 39),
+('2024-11-02', '10:00:00', '10:59:00', 'Aula de Leitura', 1, 40),
+('2024-11-01', '11:00:00', '11:59:00', 'Aula de Conversação', 4, 40);
+
+INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
+('2024-12-08', 83, 1), -- Pendente
+('2024-12-08', 83, 2), -- Confirmado
+('2024-12-08', 83, 3), -- Concluído
+('2024-12-07', 84, 1), -- Pendente
+('2024-12-07', 84, 2), -- Confirmado
+('2024-12-07', 84, 4), -- Cancelado
+('2024-12-06', 85, 1), -- Pendente
+('2024-12-06', 85, 2), -- Confirmado
+('2024-12-06', 85, 5), -- Transferido
+('2024-12-05', 86, 1), -- Pendente
+('2024-12-05', 86, 2), -- Confirmado
+('2024-12-05', 86, 3), -- Concluído
+('2024-12-04', 87, 1), -- Pendente
+('2024-12-04', 87, 2), -- Confirmado
+('2024-12-04', 87, 4), -- Cancelado
+('2024-12-03', 88, 1), -- Pendente
+('2024-12-03', 88, 2), -- Confirmado
+('2024-12-03', 88, 3), -- Concluído
+('2024-12-02', 89, 1), -- Pendente
+('2024-12-02', 89, 2), -- Confirmado
+('2024-12-02', 89, 4), -- Cancelado
+('2024-12-01', 90, 1), -- Pendente
+('2024-12-01', 90, 2), -- Confirmado
+('2024-12-01', 90, 3), -- Concluído
+('2024-11-30', 91, 1), -- Pendente
+('2024-11-30', 91, 4), -- Cancelado
+('2024-11-29', 92, 1), -- Pendente
+('2024-11-29', 92, 2), -- Confirmado
+('2024-11-29', 92, 5), -- Transferido
+('2024-11-28', 93, 1), -- Pendente
+('2024-11-28', 93, 2), -- Confirmado
+('2024-11-28', 93, 3), -- Concluído
+('2024-11-27', 94, 1), -- Pendente
+('2024-11-27', 94, 2), -- Confirmado
+('2024-11-27', 94, 5), -- Transferido
+('2024-11-26', 95, 1), -- Pendente
+('2024-11-26', 95, 3), -- Concluído
+('2024-11-25', 96, 1), -- Pendente
+('2024-11-25', 96, 2), -- Confirmado
+('2024-11-25', 96, 4), -- Cancelado
+('2024-11-24', 97, 1), -- Pendente
+('2024-11-24', 97, 2), -- Confirmado
+('2024-11-24', 97, 3), -- Concluído
+('2024-11-23', 98, 1), -- Pendente
+('2024-11-23', 98, 2), -- Confirmado
+('2024-11-23', 98, 5), -- Transferido
+('2024-11-22', 99, 1), -- Pendente
+('2024-11-22', 99, 2), -- Confirmado
+('2024-11-22', 99, 3), -- Concluído
+('2024-11-21', 100, 1), -- Pendente
+('2024-11-21', 100, 2), -- Confirmado
+('2024-11-21', 100, 4), -- Cancelado
+('2024-11-20', 101, 1), -- Pendente
+('2024-11-20', 101, 2), -- Confirmado
+('2024-11-20', 101, 3), -- Concluído
+('2024-11-19', 102, 1), -- Pendente
+('2024-11-19', 102, 2), -- Confirmado
+('2024-11-19', 102, 3), -- Concluído
+('2024-11-18', 103, 1), -- Pendente
+('2024-11-18', 103, 2), -- Confirmado
+('2024-11-18', 103, 5), -- Transferido
+('2024-11-17', 104, 1), -- Pendente
+('2024-11-17', 104, 2), -- Confirmado
+('2024-11-17', 104, 4), -- Cancelado
+('2024-11-16', 105, 1), -- Pendente
+('2024-11-16', 105, 2), -- Confirmado
+('2024-11-16', 105, 3), -- Concluído
+('2024-11-15', 106, 1), -- Pendente
+('2024-11-15', 106, 2), -- Confirmado
+('2024-11-15', 106, 4), -- Cancelado
+('2024-11-14', 107, 1), -- Pendente
+('2024-11-14', 107, 2), -- Confirmado
+('2024-11-14', 107, 3), -- Concluído
+('2024-11-13', 108, 1), -- Pendente
+('2024-11-13', 108, 2), -- Confirmado
+('2024-11-13', 108, 5), -- Transferido
+('2024-11-12', 109, 1), -- Pendente
+('2024-11-12', 109, 2), -- Confirmado
+('2024-11-12', 109, 3), -- Concluído
+('2024-11-11', 110, 1), -- Pendente
+('2024-11-11', 110, 2), -- Confirmado
+('2024-11-11', 110, 4), -- Cancelado
+('2024-11-10', 111, 1), -- Pendente
+('2024-11-10', 111, 2), -- Confirmado
+('2024-11-10', 111, 3), -- Concluído
+('2024-11-09', 112, 1), -- Pendente
+('2024-11-09', 112, 2), -- Confirmado
+('2024-11-09', 112, 4), -- Cancelado
+('2024-11-08', 113, 1), -- Pendente
+('2024-11-08', 113, 2), -- Confirmado
+('2024-11-08', 113, 5), -- Transferido
+('2024-11-07', 114, 1), -- Pendente
+('2024-11-07', 114, 2), -- Confirmado
+('2024-11-07', 114, 3), -- Concluído
+('2024-11-06', 115, 1), -- Pendente
+('2024-11-06', 115, 2), -- Confirmado
+('2024-11-06', 115, 4), -- Cancelado
+('2024-11-05', 116, 1), -- Pendente
+('2024-11-05', 116, 2), -- Confirmado
+('2024-11-05', 116, 3), -- Concluído
+('2024-11-04', 117, 1), -- Pendente
+('2024-11-04', 117, 2), -- Confirmado
+('2024-11-04', 117, 5), -- Transferido
+('2024-11-03', 118, 1), -- Pendente
+('2024-11-03', 118, 2), -- Confirmado
+('2024-11-03', 118, 4), -- Cancelado
+('2024-11-02', 119, 1), -- Pendente
+('2024-11-02', 119, 2), -- Confirmado
+('2024-11-02', 119, 3), -- Concluído
+('2024-11-01', 120, 1), -- Pendente
+('2024-11-01', 120, 2), -- Confirmado
+('2024-11-01', 120, 4); -- Cancelado
+
+INSERT INTO agendamento (data, horario_inicio, horario_fim, assunto, fk_professor, fk_aluno) VALUES 
+('2024-12-10', '08:00:00', '08:59:00', 'Aula de Conversação', 1, 40), 
+('2024-12-11', '09:00:00', '09:59:00', 'Aula de Gramática', 4, 40),
+('2024-12-12', '10:00:00', '10:59:00', 'Aula de Vocabulário', 1, 40),
+('2024-12-13', '11:00:00', '11:59:00', 'Aula de Leitura', 4, 40),
+('2024-12-14', '14:00:00', '14:59:00', 'Aula de Escrita', 1, 40),
+('2024-12-15', '15:00:00', '15:59:00', 'Aula de Pronúncia', 4, 40);
+
+INSERT INTO historico_agendamento (data_atualizacao, agendamento_id, status_id) VALUES 
+('2024-12-10', 121, 1), -- Pendente
+('2024-12-11', 122, 1), -- Pendente
+('2024-12-12', 123, 1), -- Pendente
+('2024-12-13', 124, 1), -- Pendente
+('2024-12-14', 125, 1), -- Pendente
+('2024-12-15', 126, 1); -- Pendente
+
+
+
+
+select * from agendamento;
+
